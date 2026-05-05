@@ -2,8 +2,8 @@ import { z } from 'zod'
 
 export const registerUserSchema = z.object({
   cashierPin: z.string().min(4).max(6),
-  name: z.string().min(2).max(100),
-  phone: z.string().min(10).max(15),
+  name: z.string().min(2).max(100).regex(/^[\p{L}\p{N}\s'.\-]+$/u, 'Nombre inválido: solo letras, números y caracteres comunes'),
+  phone: z.string().min(10).max(15).regex(/^[\d\s\-\+\(\)]+$/, 'Teléfono inválido: solo dígitos y caracteres comunes'),
 })
 
 export const topupSchema = z.object({
