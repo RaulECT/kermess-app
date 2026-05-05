@@ -9,7 +9,7 @@ export const registerUserSchema = z.object({
 export const topupSchema = z.object({
   cashierPin: z.string().min(4).max(6),
   userId: z.string().uuid(),
-  pesos: z.number().positive(),
+  pesos: z.number().positive().max(100000),
   paymentMethod: z.enum(['cash', 'transfer']),
   goalId: z.string().min(1),
   clientTxId: z.string().uuid(), // idempotencia
