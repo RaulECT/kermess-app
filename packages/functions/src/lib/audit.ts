@@ -12,8 +12,12 @@ interface AuditEntry {
 
 export async function writeAudit(entry: AuditEntry): Promise<void> {
   const db = getFirestore()
-  await db.collection('auditLog').add({
-    ...entry,
-    timestamp: FieldValue.serverTimestamp(),
-  })
+  try {
+    await db.collection('auditLog').add({
+      ...entry,
+      timestamp: FieldValue.serverTimestamp(),
+    })
+  } catch (e) {
+    console.error('writeAudit failed (non-critical):', e)
+  }
 }
