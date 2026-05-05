@@ -1,0 +1,1 @@
+- [Kermes App — Contexto del proyecto](project_kermess.md) — Monorepo pnpm workspaces, Next.js + Firebase, evento 30 mayo 2026

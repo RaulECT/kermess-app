@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Next.js
+packages/frontend/.next/
+packages/frontend/out/
+
+# Firebase
+packages/functions/lib/
+.firebase/
+
+# Build outputs
+packages/shared/dist/
+
+# Misc
+.DS_Store
+*.log
+.turbo/
+.emulator-data

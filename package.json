@@ -1,0 +1,21 @@
+{
+  "name": "kermess-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:functions": "pnpm --filter functions dev",
+    "build:frontend": "pnpm --filter frontend build",
+    "build:functions": "pnpm --filter functions build",
+    "build:shared": "pnpm --filter shared build",
+    "build": "pnpm build:shared && pnpm build:frontend && pnpm build:functions",
+    "lint": "pnpm --filter frontend lint",
+    "type-check": "pnpm -r type-check",
+    "emulator:start": "firebase emulators:start --import=.emulator-data --export-on-exit=.emulator-data",
+    "emulator:seed": "node scripts/seed-emulator.mjs"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  }
+}
