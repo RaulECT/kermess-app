@@ -46,9 +46,11 @@ export {
   createOperatorSchema,
   createAdminSchema,
   closeEventSchema,
+  resetSystemSchema,
 } from './validations/operator.schema'
 export type {
   CreateOperatorInput,
   CreateAdminInput,
   CloseEventInput,
+  ResetSystemInput,
 } from './validations/operator.schema'

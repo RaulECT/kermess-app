@@ -16,6 +16,11 @@ export const closeEventSchema = z.object({
   adminPin: z.string().min(4).max(6),
 })
 
+export const resetSystemSchema = z.object({
+  adminPin: z.string().min(4).max(6),
+})
+
 export type CreateOperatorInput = z.infer<typeof createOperatorSchema>
 export type CreateAdminInput = z.infer<typeof createAdminSchema>
 export type CloseEventInput = z.infer<typeof closeEventSchema>
+export type ResetSystemInput = z.infer<typeof resetSystemSchema>

@@ -13,6 +13,7 @@ export type AuditAction =
   | 'create_admin'
   | 'close_event'
   | 'update_station_status'
+  | 'reset_system'
 
 export interface AuditLog {
   id: string

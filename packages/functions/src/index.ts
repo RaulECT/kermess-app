@@ -21,6 +21,7 @@ export { charge } from './functions/estacion/charge'
 
 // Admin avanzado
 export { reverseTransaction } from './functions/admin/reverse-transaction'
+export { resetSystem } from './functions/admin/reset-system'
 
 // Triggers
 export { onTransactionCreate } from './functions/triggers/on-transaction-create'

@@ -22,7 +22,7 @@ await build({
   format: 'cjs',
   outfile: resolve(__dirname, 'lib/index.js'),
   // Keep firebase-admin and firebase-functions as external (available in Cloud Functions runtime)
-  external: ['firebase-admin', 'firebase-functions', 'firebase-admin/*', 'firebase-functions/*'],
+  external: ['firebase-admin', 'firebase-functions', 'firebase-admin/*', 'firebase-functions/*', 'bcryptjs'],
   // Include workspace packages by resolving them from the monorepo
   alias: {
     '@kermess/shared': resolve(__dirname, '../shared/src/index.ts'),
