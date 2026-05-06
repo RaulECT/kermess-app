@@ -10,7 +10,7 @@ import { toHttpsError } from '../../lib/errors'
 export const upsertStation = onCall({ region: 'us-central1', timeoutSeconds: 30 }, async (request) => {
   try {
     const { adminPin, station } = upsertStationSchema.parse(request.data)
-    const { adminId } = await validateAdminPin(adminPin)
+    const { adminId, name: adminName } = await validateAdminPin(adminPin)
 
     const db = getFirestore()
     const isNew = !station.id || station.id === null
@@ -45,9 +45,11 @@ export const upsertStation = onCall({ region: 'us-central1', timeoutSeconds: 30 
     await writeAudit({
       action: 'upsert_station',
       actorId: adminId,
+      actorName: adminName,
       actorRole: 'admin',
       targetType: 'station',
       targetId: stationId,
+      targetName: station.name,
       details: { isNew, name: station.name },
     })
 

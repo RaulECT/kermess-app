@@ -8,7 +8,7 @@ import { toHttpsError } from '../../lib/errors'
 export const updateConfig = onCall({ region: 'us-central1', timeoutSeconds: 30 }, async (request) => {
   try {
     const { adminPin, patch } = updateConfigSchema.parse(request.data)
-    const { adminId } = await validateAdminPin(adminPin)
+    const { adminId, name: adminName } = await validateAdminPin(adminPin)
 
     const db = getFirestore()
     const eventRef = db.collection('config').doc('event')
@@ -39,9 +39,11 @@ export const updateConfig = onCall({ region: 'us-central1', timeoutSeconds: 30 }
     await writeAudit({
       action: 'update_config',
       actorId: adminId,
+      actorName: adminName,
       actorRole: 'admin',
       targetType: 'config',
       targetId: 'event',
+      targetName: 'Configuración del evento',
       details: patch as Record<string, unknown>,
     })
 

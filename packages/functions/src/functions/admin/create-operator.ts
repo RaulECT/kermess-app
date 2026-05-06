@@ -10,7 +10,7 @@ import { toHttpsError } from '../../lib/errors'
 export const createOperator = onCall({ region: 'us-central1', timeoutSeconds: 30 }, async (request) => {
   try {
     const { adminPin, name, pin } = createOperatorSchema.parse(request.data)
-    const { adminId } = await validateAdminPin(adminPin)
+    const { adminId, name: adminName } = await validateAdminPin(adminPin)
 
     const db = getFirestore()
     const operatorId = uuidv4()
@@ -26,9 +26,11 @@ export const createOperator = onCall({ region: 'us-central1', timeoutSeconds: 30
     await writeAudit({
       action: 'create_operator',
       actorId: adminId,
+      actorName: adminName,
       actorRole: 'admin',
       targetType: 'operator',
       targetId: operatorId,
+      targetName: name,
       details: { name },
     })
 

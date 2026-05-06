@@ -4,9 +4,11 @@ import type { AuditAction, ActorRole } from '@kermess/shared'
 interface AuditEntry {
   action: AuditAction
   actorId: string
+  actorName?: string
   actorRole: ActorRole
   targetType: string
   targetId: string
+  targetName?: string
   details: Record<string, unknown>
 }
 

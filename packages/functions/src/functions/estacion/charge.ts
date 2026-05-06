@@ -67,11 +67,13 @@ export const charge = onCall({ region: 'us-central1', timeoutSeconds: 30 }, asyn
     if (totalCost <= 0) throw new HttpsError('invalid-argument', 'El costo debe ser mayor a 0')
 
     // Transacción atómica: validar saldo y debitar
+    let targetName = ''
     await db.runTransaction(async (tx) => {
       const userDoc = await tx.get(userRef)
       if (!userDoc.exists) throw new HttpsError('not-found', 'Usuario no encontrado')
 
       const user = userDoc.data()!
+      targetName = user.name as string
       const currentBalance = user.balance as number
 
       if (currentBalance < totalCost) {
@@ -111,9 +113,11 @@ export const charge = onCall({ region: 'us-central1', timeoutSeconds: 30 }, asyn
     await writeAudit({
       action: 'charge',
       actorId: stationId,
+      actorName: station.name as string,
       actorRole: 'operator',
       targetType: 'user',
       targetId: userId,
+      targetName,
       details: {
         totalCost,
         stationName: station.name as string,

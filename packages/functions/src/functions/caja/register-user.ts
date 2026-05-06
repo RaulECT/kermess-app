@@ -9,7 +9,7 @@ import { toHttpsError } from '../../lib/errors'
 export const registerUser = onCall({ region: 'us-central1', timeoutSeconds: 30 }, async (request) => {
   try {
     const { cashierPin, name, phone } = registerUserSchema.parse(request.data)
-    const { cashierId } = await validateCashierPin(cashierPin)
+    const { cashierId, name: cashierName } = await validateCashierPin(cashierPin)
 
     const db = getFirestore()
     const userId = uuidv4() // userId === qrToken
@@ -27,9 +27,11 @@ export const registerUser = onCall({ region: 'us-central1', timeoutSeconds: 30 }
     await writeAudit({
       action: 'create_user',
       actorId: cashierId,
+      actorName: cashierName,
       actorRole: 'cashier',
       targetType: 'user',
       targetId: userId,
+      targetName: name,
       details: { name, phone },
     })
 

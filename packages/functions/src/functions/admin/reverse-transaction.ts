@@ -9,7 +9,7 @@ import { toHttpsError } from '../../lib/errors'
 export const reverseTransaction = onCall({ region: 'us-central1', timeoutSeconds: 30 }, async (request) => {
   try {
     const { adminPin, txId, reason } = reverseTransactionSchema.parse(request.data)
-    const { adminId } = await validateAdminPin(adminPin)
+    const { adminId, name: adminName } = await validateAdminPin(adminPin)
 
     const db = getFirestore()
     const txRef = db.collection('transactions').doc(txId)
@@ -78,9 +78,11 @@ export const reverseTransaction = onCall({ region: 'us-central1', timeoutSeconds
     await writeAudit({
       action: 'reverse_tx',
       actorId: adminId,
+      actorName: adminName,
       actorRole: 'admin',
       targetType: 'transaction',
       targetId: txId,
+      targetName: tx.userName as string,
       details: { reason, reversalId, originalType: tx.type },
     })
 

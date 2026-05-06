@@ -10,7 +10,7 @@ export const topup = onCall({ region: 'us-central1', timeoutSeconds: 30 }, async
     const { cashierPin, userId, pesos, paymentMethod, goalId, clientTxId } =
       topupSchema.parse(request.data)
 
-    const { cashierId } = await validateCashierPin(cashierPin)
+    const { cashierId, name: cashierName } = await validateCashierPin(cashierPin)
 
     const db = getFirestore()
     const userRef = db.collection('users').doc(userId)
@@ -41,11 +41,13 @@ export const topup = onCall({ region: 'us-central1', timeoutSeconds: 30 }, async
     if (coupons <= 0) throw new HttpsError('invalid-argument', 'El monto no genera cupones')
 
     // Transacción atómica: actualizar balance + crear tx
+    let targetName = ''
     await db.runTransaction(async (tx) => {
       const userDoc = await tx.get(userRef)
       if (!userDoc.exists) throw new HttpsError('not-found', 'Usuario no encontrado')
 
       const user = userDoc.data()!
+      targetName = user.name as string
       const newBalance = (user.balance as number) + coupons
       const newTotalLoaded = (user.totalLoaded as number) + coupons
 
@@ -68,9 +70,11 @@ export const topup = onCall({ region: 'us-central1', timeoutSeconds: 30 }, async
     await writeAudit({
       action: 'topup',
       actorId: cashierId,
+      actorName: cashierName,
       actorRole: 'cashier',
       targetType: 'user',
       targetId: userId,
+      targetName,
       details: { pesos, coupons, paymentMethod, goalId },
     })
 
