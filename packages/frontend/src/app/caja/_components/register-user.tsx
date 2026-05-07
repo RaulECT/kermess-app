@@ -88,9 +88,6 @@ export function RegisterUser({ onBack }: { onBack: () => void }) {
   if (result) {
     const base = process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin
     const url = `${base}/asistente/${result.userId}`
-    const whatsappMsg = encodeURIComponent(
-      `¡Hola ${result.name}! 🎉 Aquí está tu link para Kupón. Ábrelo para ver tus cupones y QR:\n${url}`
-    )
 
     return (
       <div className="flex flex-col items-center gap-6 p-4">
@@ -110,14 +107,6 @@ export function RegisterUser({ onBack }: { onBack: () => void }) {
         </div>
 
         <div className="flex w-full max-w-sm flex-col gap-2">
-          <a
-            href={`https://wa.me/?text=${whatsappMsg}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-3 text-sm font-semibold text-white hover:bg-green-700"
-          >
-            Enviar por WhatsApp
-          </a>
           <Button
             variant="outline"
             onClick={() => { navigator.clipboard.writeText(url); toast.success('Link copiado') }}
