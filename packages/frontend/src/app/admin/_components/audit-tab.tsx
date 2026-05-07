@@ -21,6 +21,7 @@ const ACTION_LABEL: Record<AuditAction, string> = {
   create_admin:         'Nuevo administrador',
   close_event:          'Cierre de evento',
   update_station_status:'Cambio de estado de estación',
+  reset_system:         'Reset del sistema',
 }
 
 const ROLE_LABEL: Record<ActorRole, string> = {
