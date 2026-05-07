@@ -6,18 +6,18 @@ import { validateCashierPin } from '../../lib/validate-pin'
 import { writeAudit } from '../../lib/audit'
 import { toHttpsError } from '../../lib/errors'
 import {
-  sendWelcomeWhatsApp,
+  sendWelcomeSMS,
   TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN,
-  TWILIO_WA_FROM,
+  TWILIO_SMS_FROM,
   APP_BASE_URL,
-} from '../../lib/whatsapp'
+} from '../../lib/sms'
 
 export const registerUser = onCall(
   {
     region: 'us-central1',
     timeoutSeconds: 30,
-    secrets: [TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WA_FROM, APP_BASE_URL],
+    secrets: [TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_SMS_FROM, APP_BASE_URL],
   },
   async (request) => {
     try {
@@ -50,7 +50,7 @@ export const registerUser = onCall(
       })
 
       try {
-        await sendWelcomeWhatsApp({ to: phone, name, token: userId })
+        await sendWelcomeSMS({ to: phone, name, token: userId })
       } catch (err) {
         console.error('WhatsApp send failed:', err)
       }
