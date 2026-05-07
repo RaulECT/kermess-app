@@ -1,0 +1,6 @@
+{
+  "framework": "nextjs",
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm --filter @kermess/shared build && pnpm --filter @kermess/frontend build",
+  "outputDirectory": "packages/frontend/.next"
+}
