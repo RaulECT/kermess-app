@@ -23,3 +23,5 @@ packages/shared/dist/
 *.log
 .turbo/
 .emulator-data
+.vercel
+.env*.local
