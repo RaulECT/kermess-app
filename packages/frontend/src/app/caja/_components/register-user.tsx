@@ -89,7 +89,7 @@ export function RegisterUser({ onBack }: { onBack: () => void }) {
     const base = process.env.NEXT_PUBLIC_APP_URL ?? window.location.origin
     const url = `${base}/asistente/${result.userId}`
     const whatsappMsg = encodeURIComponent(
-      `¡Hola ${result.name}! 🎉 Aquí está tu link para la Kermes App. Ábrelo para ver tus cupones y QR:\n${url}`
+      `¡Hola ${result.name}! 🎉 Aquí está tu link para Kupón. Ábrelo para ver tus cupones y QR:\n${url}`
     )
 
     return (

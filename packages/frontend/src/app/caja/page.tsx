@@ -44,7 +44,7 @@ function CajaSidebar({
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-primary">
           <span className="font-mono text-[22px] font-bold text-fg-inverse">K</span>
         </div>
-        <span className="text-[18px] font-semibold text-fg-primary">Kermess Caja</span>
+        <span className="text-[18px] font-semibold text-fg-primary">Kupón</span>
       </div>
 
       {/* Operator card */}

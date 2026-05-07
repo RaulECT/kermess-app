@@ -47,7 +47,7 @@ function AdminSidebarDesktop({
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-primary">
           <span className="text-[18px] font-bold text-fg-inverse">K</span>
         </div>
-        <span className="text-[18px] font-semibold text-fg-primary">Kermess</span>
+        <span className="text-[18px] font-semibold text-fg-primary">Kupón</span>
       </div>
 
       {/* Nav */}

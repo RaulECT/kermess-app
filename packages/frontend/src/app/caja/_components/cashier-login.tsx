@@ -31,7 +31,7 @@ export function CashierLogin() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Módulo Caja</CardTitle>
-          <CardDescription>Kermes App</CardDescription>
+          <CardDescription>Kupón</CardDescription>
         </CardHeader>
         <CardContent>
           <PinPad onSubmit={handlePin} loading={loading} error={error} label="PIN de cajero" />

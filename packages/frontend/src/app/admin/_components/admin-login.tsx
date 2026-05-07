@@ -119,7 +119,7 @@ export function AdminLogin() {
     <Card className="w-full max-w-sm">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl">Panel Admin</CardTitle>
-        <CardDescription>Kermes App</CardDescription>
+        <CardDescription>Kupón</CardDescription>
       </CardHeader>
       <CardContent>
         <PinPad

@@ -15,13 +15,13 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Kermes App',
+  title: 'Kupón',
   description: 'Tus cupones digitales para la kermes',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'Kermes App',
+    title: 'Kupón',
   },
 }
 
