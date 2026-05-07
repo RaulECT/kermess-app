@@ -14,6 +14,7 @@ export { createAdmin } from './functions/admin/create-admin'
 export { cashierLogin } from './functions/caja/cashier-login'
 export { registerUser } from './functions/caja/register-user'
 export { topup } from './functions/caja/topup'
+export { resendUserLink } from './functions/caja/resend-user-link'
 
 // Estación
 export { stationLogin } from './functions/estacion/station-login'
