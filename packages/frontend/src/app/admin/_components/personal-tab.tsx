@@ -1,13 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
-import { collection, onSnapshot } from 'firebase/firestore'
-import { db } from '@/lib/firebase/client'
-import { createOperator, createAdmin } from '@/lib/firebase/callables'
+import { createOperator, createAdmin, listStaff } from '@/lib/firebase/callables'
 import { useAdminSession } from '@/context/admin-session'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -37,17 +35,19 @@ export function PersonalTab() {
   const [staff, setStaff] = useState<StaffEntry[]>([])
   const [dialogOpen, setDialogOpen] = useState(false)
 
+  const fetchStaff = useCallback(async () => {
+    if (!session) return
+    try {
+      const res = await listStaff({ adminPin: session.pin })
+      setStaff([...res.operators, ...res.admins])
+    } catch {
+      // silencioso — no interrumpir la UI si falla
+    }
+  }, [session])
+
   useEffect(() => {
-    const unsubOperators = onSnapshot(collection(db, 'operators'), (snap) => {
-      const operators: StaffEntry[] = snap.docs.map((d) => ({ id: d.id, name: d.data().name as string, role: 'cashier' }))
-      setStaff((prev) => [...prev.filter((s) => s.role !== 'cashier'), ...operators])
-    })
-    const unsubAdmins = onSnapshot(collection(db, 'admins'), (snap) => {
-      const admins: StaffEntry[] = snap.docs.map((d) => ({ id: d.id, name: d.data().name as string, role: 'admin' }))
-      setStaff((prev) => [...prev.filter((s) => s.role !== 'admin'), ...admins])
-    })
-    return () => { unsubOperators(); unsubAdmins() }
-  }, [])
+    fetchStaff()
+  }, [fetchStaff])
   const [staffType, setStaffType] = useState<StaffType>('cashier')
   const [saving, setSaving] = useState(false)
   const [createdPin, setCreatedPin] = useState<{ name: string; pin: string } | null>(null)
@@ -74,6 +74,7 @@ export function PersonalTab() {
         await createAdmin({ adminPin: session.pin, name: values.name, pin: values.pin })
       }
       setCreatedPin({ name: values.name, pin: values.pin })
+      fetchStaff()
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : 'Error al crear')
     } finally {

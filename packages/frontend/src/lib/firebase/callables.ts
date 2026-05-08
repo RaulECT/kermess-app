@@ -58,6 +58,9 @@ export const createOperator = (data: { adminPin: string; name: string; pin: stri
 export const createAdmin = (data: { adminPin: string; name: string; pin: string }) =>
   call<typeof data, { adminId: string }>('createAdmin', data)
 
+export const listStaff = (data: { adminPin: string }) =>
+  call<typeof data, { operators: Array<{ id: string; name: string; role: 'cashier' }>; admins: Array<{ id: string; name: string; role: 'admin' }> }>('listStaff', data)
+
 // Caja
 export const cashierLogin = (data: { pin: string }) =>
   call<{ pin: string }, { cashierId: string; name: string }>('cashierLogin', data)

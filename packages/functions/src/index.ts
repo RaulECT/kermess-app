@@ -9,6 +9,7 @@ export { updateConfig } from './functions/admin/update-config'
 export { upsertStation } from './functions/admin/upsert-station'
 export { createOperator } from './functions/admin/create-operator'
 export { createAdmin } from './functions/admin/create-admin'
+export { listStaff } from './functions/admin/list-staff'
 
 // Caja
 export { cashierLogin } from './functions/caja/cashier-login'
