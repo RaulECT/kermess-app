@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState, useMemo } from 'react'
 import { doc, getDoc } from 'firebase/firestore'
 import { Html5Qrcode } from 'html5-qrcode'
 import { db } from '@/lib/firebase/client'
@@ -18,16 +18,17 @@ export function QrChargeFlow() {
   const [user, setUser] = useState<User | null>(null)
   const [errorMsg, setErrorMsg] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+  // ID único por montaje — evita que Html5Qrcode reutilice estado global de sesiones anteriores
+  const scanId = useMemo(() => `qr-reader-${Math.random().toString(36).slice(2)}`, [])
 
   const handleFile = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    // Limpiar el input para que pueda usarse de nuevo
     e.target.value = ''
 
     setFlowState('loading-user')
+    const scanner = new Html5Qrcode(scanId)
     try {
-      const scanner = new Html5Qrcode('qr-file-reader')
       const token = await scanner.scanFile(file, false)
       scanner.clear()
 
@@ -40,10 +41,11 @@ export function QrChargeFlow() {
       setUser({ id: snap.id, ...(snap.data() as Omit<User, 'id'>) })
       setFlowState('charging')
     } catch {
+      scanner.clear()
       setErrorMsg('No se pudo leer el código QR. Intenta de nuevo.')
       setFlowState('error')
     }
-  }, [])
+  }, [scanId])
 
   function reset() {
     setFlowState('idle')
@@ -56,7 +58,7 @@ export function QrChargeFlow() {
   return (
     <div className="flex flex-col gap-4">
       {/* Elemento oculto requerido por html5-qrcode para scanFile */}
-      <div id="qr-file-reader" className="hidden" />
+      <div id={scanId} className="hidden" />
 
       {/* Input de cámara nativa */}
       <input
