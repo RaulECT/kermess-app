@@ -1,10 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
+import { collection, onSnapshot } from 'firebase/firestore'
+import { db } from '@/lib/firebase/client'
 import { createOperator, createAdmin } from '@/lib/firebase/callables'
 import { useAdminSession } from '@/context/admin-session'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -34,6 +36,18 @@ export function PersonalTab() {
   const { session } = useAdminSession()
   const [staff, setStaff] = useState<StaffEntry[]>([])
   const [dialogOpen, setDialogOpen] = useState(false)
+
+  useEffect(() => {
+    const unsubOperators = onSnapshot(collection(db, 'operators'), (snap) => {
+      const operators: StaffEntry[] = snap.docs.map((d) => ({ id: d.id, name: d.data().name as string, role: 'cashier' }))
+      setStaff((prev) => [...prev.filter((s) => s.role !== 'cashier'), ...operators])
+    })
+    const unsubAdmins = onSnapshot(collection(db, 'admins'), (snap) => {
+      const admins: StaffEntry[] = snap.docs.map((d) => ({ id: d.id, name: d.data().name as string, role: 'admin' }))
+      setStaff((prev) => [...prev.filter((s) => s.role !== 'admin'), ...admins])
+    })
+    return () => { unsubOperators(); unsubAdmins() }
+  }, [])
   const [staffType, setStaffType] = useState<StaffType>('cashier')
   const [saving, setSaving] = useState(false)
   const [createdPin, setCreatedPin] = useState<{ name: string; pin: string } | null>(null)
@@ -55,11 +69,9 @@ export function PersonalTab() {
     setSaving(true)
     try {
       if (staffType === 'cashier') {
-        const result = await createOperator({ adminPin: session.pin, name: values.name, pin: values.pin })
-        setStaff((prev) => [...prev, { id: result.operatorId, name: values.name, role: 'cashier' }])
+        await createOperator({ adminPin: session.pin, name: values.name, pin: values.pin })
       } else {
-        const result = await createAdmin({ adminPin: session.pin, name: values.name, pin: values.pin })
-        setStaff((prev) => [...prev, { id: result.adminId, name: values.name, role: 'admin' }])
+        await createAdmin({ adminPin: session.pin, name: values.name, pin: values.pin })
       }
       setCreatedPin({ name: values.name, pin: values.pin })
     } catch (e: unknown) {

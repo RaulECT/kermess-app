@@ -33,7 +33,7 @@ export const resetSystem = onCall({ region: 'us-central1', timeoutSeconds: 120 }
     // Reset event config: back to setup, totals to 0
     const configRef = db.collection('config').doc('event')
     const configSnap = await configRef.get()
-    if (configSnap.exists()) {
+    if (configSnap.exists) {
       const data = configSnap.data()!
       const resetGoals = (data.goals as Array<Record<string, unknown>>).map((g) => ({ ...g, raised: 0 }))
       await configRef.update({
