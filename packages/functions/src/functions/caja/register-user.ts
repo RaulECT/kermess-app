@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { registerUserSchema } from '@kermess/shared'
 import { validateCashierPin } from '../../lib/validate-pin'
 import { writeAudit } from '../../lib/audit'
-import { toHttpsError } from '../../lib/errors'
+import { toHttpsError, logSystemError, isSystemicError } from '../../lib/errors'
 import {
   sendWelcomeSMS,
   TWILIO_ACCOUNT_SID,
@@ -57,6 +57,11 @@ export const registerUser = onCall(
 
       return { userId, qrToken: userId }
     } catch (e) {
+      if (isSystemicError(e)) {
+        const { cashierPin: _pin, ...safeData } = (request.data ?? {}) as Record<string, unknown> & { cashierPin?: unknown }
+        void _pin
+        logSystemError('registerUser', e, safeData)
+      }
       throw toHttpsError(e)
     }
   }

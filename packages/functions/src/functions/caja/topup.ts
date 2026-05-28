@@ -3,7 +3,7 @@ import { getFirestore, FieldValue } from 'firebase-admin/firestore'
 import { topupSchema } from '@kermess/shared'
 import { validateCashierPin } from '../../lib/validate-pin'
 import { writeAudit } from '../../lib/audit'
-import { toHttpsError } from '../../lib/errors'
+import { toHttpsError, logSystemError, isSystemicError } from '../../lib/errors'
 
 export const topup = onCall({ region: 'us-central1', timeoutSeconds: 30 }, async (request) => {
   try {
@@ -80,6 +80,11 @@ export const topup = onCall({ region: 'us-central1', timeoutSeconds: 30 }, async
 
     return { txId: clientTxId, coupons }
   } catch (e) {
+    if (isSystemicError(e)) {
+      const { cashierPin: _pin, ...safeData } = (request.data ?? {}) as Record<string, unknown> & { cashierPin?: unknown }
+      void _pin
+      logSystemError('topup', e, safeData)
+    }
     throw toHttpsError(e)
   }
 })

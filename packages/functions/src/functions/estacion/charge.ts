@@ -3,7 +3,7 @@ import { getFirestore, FieldValue } from 'firebase-admin/firestore'
 import { chargeSchema } from '@kermess/shared'
 import { comparePin } from '../../lib/hash'
 import { writeAudit } from '../../lib/audit'
-import { toHttpsError } from '../../lib/errors'
+import { toHttpsError, logSystemError, isSystemicError } from '../../lib/errors'
 
 export const charge = onCall({ region: 'us-central1', timeoutSeconds: 30 }, async (request) => {
   try {
@@ -127,6 +127,11 @@ export const charge = onCall({ region: 'us-central1', timeoutSeconds: 30 }, asyn
 
     return { txId: clientTxId, couponsCharged: totalCost }
   } catch (e) {
+    if (isSystemicError(e)) {
+      const { operatorPin: _pin, ...safeData } = (request.data ?? {}) as Record<string, unknown> & { operatorPin?: unknown }
+      void _pin
+      logSystemError('charge', e, safeData)
+    }
     throw toHttpsError(e)
   }
 })

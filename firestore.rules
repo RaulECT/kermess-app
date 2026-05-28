@@ -73,6 +73,16 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // ─────────────────────────────────────────────
+    // systemErrors/{errorId}
+    // Escritura SOLO Cloud Function (admin SDK).
+    // Lectura pública (protegida por token secreto en la URL del cliente).
+    // ─────────────────────────────────────────────
+    match /systemErrors/{errorId} {
+      allow read, update: if true;
+      allow create, delete: if false;
+    }
+
     // Denegar todo lo demás por defecto
     match /{document=**} {
       allow read, write: if false;
